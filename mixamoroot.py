@@ -104,10 +104,16 @@ def copyHips(root_bone_name="Root", hip_bone_name="mixamorig:Hips", name_prefix=
     
     myFcurves = bpy.context.object.animation_data.action.fcurves
         
-    for i in myFcurves:
-        hip_bone_fcvurve = 'pose.bones["'+hip_bone_name+'"].location'
-        if str(i.data_path)==hip_bone_fcvurve:
-            myFcurves.remove(i)
+    # TODO: DO not remove entire hip bone.
+    # IN BLENDER: Constrain bone.
+    # constrain and copy root bone instead on XY, but not z. Z is hips.
+
+
+    # Remove only the xy. Let Z control it
+    # for i in myFcurves:
+    #     hip_bone_fcvurve = 'pose.bones["'+hip_bone_name+'"].location'
+    #     if str(i.data_path)==hip_bone_fcvurve:
+    #         myFcurves.remove(i)
                 
     bpy.ops.pose.select_all(action='DESELECT')
     bpy.context.object.pose.bones[name_prefix + root_bone_name].bone.select = True
@@ -241,7 +247,7 @@ def copy_hips_nla(root_bone_name="Root", hip_bone_name="mixamorig:Hips", name_pr
                 # Z axis location curve
                 if fc.array_index == 2:
                     for kp in fc.keyframe_points:
-                        kp.co.z = min(0, abs(kp.co.z))
+                        kp.co.z = 0
                         
             # Delete rotation curves for x(0) and y(1) axis. Should we delet Z rotation too? 
             # rot_fcurves = [fc for fc in strip.fcurves if root_bone_name in fc.data_path and fc.data_path.startswith('rotation') and (fc.array_index == 0 or fc.array_index == 1)]
@@ -298,9 +304,9 @@ def add_root_bone(root_bone_name="Root", hip_bone_name="mixamorig:Hips", remove_
     armature.data.edit_bones[hip_bone_name].parent = armature.data.edit_bones[name_prefix + root_bone_name]
     bpy.ops.object.mode_set(mode='OBJECT')
 
-    fixBones(remove_prefix=remove_prefix, name_prefix=name_prefix)
     scaleAll()
     copyHips(root_bone_name=root_bone_name, hip_bone_name=hip_bone_name, name_prefix=name_prefix)
+        fixBones(remove_prefix=remove_prefix, name_prefix=name_prefix)
 
 def add_root_bone_nla(root_bone_name="Root", hip_bone_name="mixamorig:Hips", name_prefix="mixamorig:"):#remove_prefix=False, name_prefix="mixamorig:"):
     armature = bpy.context.selected_objects[0]
