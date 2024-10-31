@@ -306,7 +306,7 @@ def add_root_bone(root_bone_name="Root", hip_bone_name="mixamorig:Hips", remove_
 
     scaleAll()
     copyHips(root_bone_name=root_bone_name, hip_bone_name=hip_bone_name, name_prefix=name_prefix)
-        fixBones(remove_prefix=remove_prefix, name_prefix=name_prefix)
+    fixBones(remove_prefix=remove_prefix, name_prefix=name_prefix)
 
 def add_root_bone_nla(root_bone_name="Root", hip_bone_name="mixamorig:Hips", name_prefix="mixamorig:"):#remove_prefix=False, name_prefix="mixamorig:"):
     armature = bpy.context.selected_objects[0]
